@@ -6,20 +6,25 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
-            <!-- Buscamos el campo 'user_id' que es estándar en Odoo 18 dentro 
-                 de la pestaña de 'Información de trabajo' (hr_settings).
+            <!-- Usamos 'monday_location_id' como ancla técnica.
+                 Insertamos el grupo de validación justo ANTES de que empiecen los días.
             -->
-            <xpath expr="//field[@name='user_id']" position="after">
-                <group string="Gestión de Teletrabajo">
-                    <field name="telework_manager_id" widget="many2one_avatar_employee"/>
-                    <field name="telework_state" widget="statusbar" statusbar_visible="draft,validated"/>
-                    
-                    <button name="action_validate_telework" 
-                            string="Validar Teletrabajo" 
-                            type="object" 
-                            class="oe_highlight" 
-                            invisible="telework_state != 'draft'"/>
-                </group>
+            <xpath expr="//field[@name='monday_location_id']" position="before">
+                <field name="is_telework_manager" invisible="1"/>
+                <label for="telework_state" string="Estado Validación"/>
+                <div class="o_row">
+                    <field name="telework_state" widget="badge"
+                           decoration-info="telework_state == 'draft'"
+                           decoration-success="telework_state == 'validated'"/>
+
+                    <button name="action_validate_telework"
+                            string="Validar Teletrabajo"
+                            type="object"
+                            class="btn btn-primary btn-sm"
+                            invisible="telework_state != 'draft' or not is_telework_manager"
+                            confirm="¿Estás seguro de que deseas validar el teletrabajo para este empleado?"/>
+                </div>
+                <field name="parent_id" string="Gerente Autorizador" readonly="1"/>
             </xpath>
         </field>
     </record>
