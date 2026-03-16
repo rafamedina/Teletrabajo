@@ -2,9 +2,9 @@ name: Subida a Pre-Prod
 
 on:
   push:
-    branches: ["18.0-dev", "master"]
+    branches: ["dev"]
   pull_request:
-    branches: ["18.0-dev", "master"]
+    branches: ["dev"]
   workflow_dispatch:
 
 env:
@@ -226,8 +226,8 @@ jobs:
   # 🔄 Job 5: Promote to Pre-Prod
   promote-to-preprod:
     name: 🔄 Sync & Clean Pre-Prod
-    # needs: [test-unit, test-integration]
-    if: github.event_name == 'push' && success() && (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master')
+    needs: lint
+    if: github.event_name == 'push' && success() && github.ref == 'refs/heads/dev'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -257,6 +257,3 @@ jobs:
           # Push branch y tag
           git push origin pre-prod --force
           git push origin $TAG_NAME --force
-
-
-          // prueba
