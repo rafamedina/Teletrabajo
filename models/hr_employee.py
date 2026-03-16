@@ -87,7 +87,7 @@ class HrEmployee(models.Model):
                     }
                 )
 
-    # PIEZA 3 (Lógica) - INICIO
+    # (Lógica) - INICIO
     def action_validate_telework(self):
         """Valida el teletrabajo. Solo el gerente (parent_id) puede validar."""
         for employee in self:
@@ -99,8 +99,3 @@ class HrEmployee(models.Model):
                 )
 
             employee.telework_state = "validated"
-
-    # PIEZA 3 (Lógica) - FIN
-
-
-# PIEZA 1 (Modelo) - FIN
