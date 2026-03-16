@@ -9,7 +9,7 @@
             <!-- Usamos 'monday_location_id' como ancla técnica.
                  Insertamos el grupo de validación justo ANTES de que empiecen los días.
             -->
-            <xpath expr="//field[@name='monday_location_id']" position="before">
+            <xpath expr="//field[@name='work_location_id']" position="after">
                 <field name="is_telework_manager" invisible="1"/>
                 <label for="telework_state" string="Estado Validación"/>
                 <div class="o_row">
