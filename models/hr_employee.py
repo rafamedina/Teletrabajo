@@ -54,8 +54,32 @@ class HrEmployee(models.Model):
         # Si alguno de los campos de días está en los valores a cambiar, forzamos sin validar
         if any(field in vals for field in day_fields):
             vals["telework_state"] = "draft"
+            self._create_telework_activity()
 
         return super(HrEmployee, self).write(vals)
+
+    def _create_telework_activity(self):
+        """Crea una actividad para el gerente del empleado cuando se cambia el horario de teletrabajo."""
+        for employee in self:
+            if employee.parent_id and employee.parent_id.user_id:
+                # Buscamos el tipo de actividad 'To Do' o similar
+                activity_type = self.env.ref(
+                    "mail.mail_activity_data_todo", raise_if_not_found=False
+                )
+
+                self.env["mail.activity"].create(
+                    {
+                        "res_id": employee.id,
+                        "res_model_id": self.env.ref("hr.model_hr_employee").id,
+                        "activity_type_id": activity_type.id
+                        if activity_type
+                        else False,
+                        "summary": "Validación de Teletrabajo",
+                        "note": "El empleado %s ha cambiado la fecha del teletrabajo, por favor entre a validar los cambios."
+                        % employee.name,
+                        "user_id": employee.parent_id.user_id.id,
+                    }
+                )
 
     # PIEZA 3 (Lógica) - INICIO
     def action_validate_telework(self):
