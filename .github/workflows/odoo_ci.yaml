@@ -245,7 +245,7 @@ jobs:
           echo "Promoting to Pre-Prod with tag: $TAG_NAME"
 
           git checkout -B pre-prod
-          rm -rf .agents/ tests/ conductor/ .github/ .ruff_cache/ Ejemplo/ scripts/
+          rm -rf .agents/ tests/ conductor/ .github/ .ruff_cache/ Ejemplo/ scripts/ __pycache__/ .vscode/ .idea/ .git/ .github/ .pre-commit-config.yaml .gitignore Dockerfile pytest.ini pyproject.toml requirements.txt image.png
           rm -f skills-lock.json .gitignore .pre-commit-config.yaml Dockerfile pytest.ini pyproject.toml requirements.txt image.png
           git add -A
           git commit -m "build: clean staging release [skip ci]" || echo "No changes"
