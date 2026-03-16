@@ -52,11 +52,17 @@ class HrEmployee(models.Model):
             "sunday_location_id",
         ]
         # Si alguno de los campos de días está en los valores a cambiar, forzamos sin validar
+        should_create_activity = False
         if any(field in vals for field in day_fields):
             vals["telework_state"] = "draft"
+            should_create_activity = True
+
+        res = super(HrEmployee, self).write(vals)
+
+        if should_create_activity:
             self._create_telework_activity()
 
-        return super(HrEmployee, self).write(vals)
+        return res
 
     def _create_telework_activity(self):
         """Crea una actividad para el gerente del empleado cuando se cambia el horario de teletrabajo."""
