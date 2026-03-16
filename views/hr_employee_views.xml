@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- PIEZA 2 (Vista) - INICIO -->
+    <record id="view_employee_form_inherit_telework" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit.telework</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <!-- Buscamos la página de teletrabajo existente. 
+                 Si no existe una con ese nombre exacto, podemos usar xpath para insertarlo en public o hr_settings.
+                 Asumimos que el módulo de teletrabajo estándar usa 'telework' como nombre de página.
+            -->
+            <xpath expr="//page[@name='telework']" position="inside">
+                <group string="Validación de Teletrabajo">
+                    <field name="telework_manager_id" widget="many2one_avatar_employee"/>
+                    <field name="telework_state" widget="statusbar" statusbar_visible="draft,validated"/>
+                    
+                    <button name="action_validate_telework" 
+                            string="Validar Teletrabajo" 
+                            type="object" 
+                            class="oe_highlight" 
+                            invisible="telework_state != 'draft'"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+    <!-- PIEZA 2 (Vista) - FIN -->
+</odoo>

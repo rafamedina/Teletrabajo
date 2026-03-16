@@ -6,9 +6,9 @@
     'author': '',
     'website': '',
     'category': '',
-    'depends': ['base', 'web'],
+    'depends': ["base", "mail", "hr", "hr_skills"],
     'data': [
-        
+        'views/hr_employee_views.xml',
     ],
     'assets': {
               'web.assets_backend': [
