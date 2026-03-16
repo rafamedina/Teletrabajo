@@ -256,6 +256,3 @@ jobs:
           # Push branch y tag
           git push origin pre-prod --force
           git push origin $TAG_NAME --force
-
-
-          // prueba
