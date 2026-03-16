@@ -2,10 +2,10 @@
 
 ## Phase 1: Scaffolding & Data Model
 
-- [~] Task: Define `telework.request` model with fields (`employee_id`, `date`, `state`, `manager_id`)
+- [x] Task: Define `telework.request` model with fields (`employee_id`, `date`, `state`, `manager_id`) 82e34ab
   - [ ] Write tests for model structure and default values
   - [ ] Implement `telework.request` model in `models/telework_request.py`
-- [ ] Task: Set up Access Rights and Rules
+- [x] Task: Set up Access Rights and Rules 82e34ab
   - [ ] Define `ir.model.access.csv` for the new model
   - [ ] Create Record Rules for employees (own requests) and managers (department requests)
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Scaffolding & Data Model' (Protocol in workflow.md)
