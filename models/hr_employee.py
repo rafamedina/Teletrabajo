@@ -3,21 +3,23 @@ from odoo import models, fields, api
 from odoo.exceptions import UserError
 
 
-# PIEZA 1 (Modelo) - INICIO
+# creamos el modelo que hereda de hr.employee para agregar el campo de estado del teletrabajo y el campo booleano para identificar a los gerentes de teletrabajo. También agregamos la lógica para validar el teletrabajo y crear actividades para los gerentes cuando se cambian los días de teletrabajo.
 class HrEmployee(models.Model):
-    _inherit = "hr.employee"
+    _inherit = "hr.employee"  # Heredamos del modelo hr.employee para agregar campos y lógica relacionada con el teletrabajo
 
     telework_state = fields.Selection(
         [
             ("draft", "Sin validar"),
             ("validated", "Validado"),
-        ],
+        ],  # Definimos los estados posibles para el teletrabajo: "draft" para sin validar y "validated" para validado
         string="Estado de Teletrabajo",
         default="draft",
         tracking=True,
     )
 
-    is_telework_manager = fields.Boolean(compute="_compute_is_telework_manager")
+    is_telework_manager = fields.Boolean(
+        compute="_compute_is_telework_manager"
+    )  # Creamos un campo booleano computado para identificar si el empleado es gerente de teletrabajo
 
     @api.depends("parent_id")
     def _compute_is_telework_manager(self):
