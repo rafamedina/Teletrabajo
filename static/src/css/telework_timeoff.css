@@ -1,41 +1,61 @@
-/* Telework Integration - Visual Styles for Time Off Calendar */
+/* Telework Integration - Refined Visual Styles for Time Off Calendar */
 
 /* 
-   Odoo 18 Calendar Event Colors. 
-   Color 5 is Purple.
-   We use high specificity to override Odoo's default 'hr_holidays' styles.
+   Lilac Theme:
+   Base Lilac: #E6E6FA (Lavender)
+   Stripe Lilac: #D8BFD8 (Thistle)
+   Text: #212529 (Dark Grey for contrast)
 */
 
-/* Base style for Telework events (Solid Purple) */
+/* 1. Base Styles for Telework (Color 5) - Validated State (Solid) */
 .o_calendar_view .fc-event.o_calendar_color_5,
 .o_calendar_view .fc-event.o_calendar_color_5 .fc-event-main,
 .o_calendar_view .fc-event.o_calendar_color_5 .fc-event-main-frame {
-    background-color: #6B4C9A !important; /* Deep Purple */
-    border-color: #553C7B !important;
-    color: #FFFFFF !important;
+    background-color: #E6E6FA !important;
+    border-color: #D8BFD8 !important;
+    color: #212529 !important; /* Dark text for contrast */
     opacity: 1 !important;
 }
 
-/* Striped Purple for Pending/Draft Telework 
-   Odoo 18 uses 'opacity' or specific classes for pending leaves.
+/* Ensure text inside is dark and readable */
+.o_calendar_view .fc-event.o_calendar_color_5 .fc-event-title,
+.o_calendar_view .fc-event.o_calendar_color_5 .fc-event-time {
+    color: #212529 !important;
+    font-weight: bold !important;
+}
+
+/* 2. Pending State (Striped Lilac) 
+   We target events that Odoo marked as pending (usually via opacity or specific classes)
 */
 .o_calendar_view .fc-event.o_calendar_color_5[style*="opacity"],
 .o_calendar_view .fc-event.o_calendar_color_5.o_event_draft,
-.o_calendar_view .fc-event.o_calendar_color_5.o_event_confirm {
+.o_calendar_view .fc-event.o_calendar_color_5.o_event_confirm,
+.o_calendar_view .fc-event.o_calendar_color_5.o_calendar_slot_waiting {
     background: repeating-linear-gradient(
         45deg,
-        #6B4C9A,
-        #6B4C9A 10px,
-        #8E6BBF 10px,
-        #8E6BBF 20px
+        #E6E6FA,
+        #E6E6FA 10px,
+        #D8BFD8 10px,
+        #D8BFD8 20px
     ) !important;
-    border-color: #553C7B !important;
-    opacity: 1 !important; /* Force visibility */
+    border-color: #D8BFD8 !important;
+    opacity: 1 !important; /* Force full visibility but kept the stripes */
 }
 
-/* Fix for the internal container in striped mode */
+/* Fix for internal containers in striped mode */
 .o_calendar_view .fc-event.o_calendar_color_5[style*="opacity"] .fc-event-main,
 .o_calendar_view .fc-event.o_calendar_color_5.o_event_draft .fc-event-main,
 .o_calendar_view .fc-event.o_calendar_color_5.o_event_confirm .fc-event-main {
     background: transparent !important;
+}
+
+/* 3. Fallback for Color 2 (Yellow) - If Odoo didn't update the Leave Type color yet
+   We apply the same Lilac styles to override the default yellow.
+*/
+.o_calendar_view .fc-event.o_calendar_color_2 {
+    /* Only apply if the event belongs to Telework. 
+       Note: CSS cannot easily check the text, but if the user sees yellow, 
+       this might help if we target the specific instance.
+       For now, we recommend updating the Leave Type via UI to Color 5.
+    */
 }
