@@ -7,7 +7,7 @@
             <field name="requires_allocation">no</field>
             <field name="request_unit">day</field>
             <field name="leave_validation_type">hr</field>
-            <field name="color">5</field> <!-- Purple -->
+            <field name="color">10</field> <!-- Unique color for Telework to avoid conflicts -->
             <field name="responsible_ids" eval="[(4, ref('base.group_user'))]"/>
             <field name="active" eval="True"/>
         </record>

@@ -2,25 +2,25 @@
 
 ## Phase 1: Configuration & Cleanup
 
-- [~] Task: Remove obsolete `telework.request` model, views, and security
-  - [ ] Delete `models/telework_request.py`
-  - [ ] Delete `views/telework_request_views.xml`
-  - [ ] Delete `security/telework_request_security.xml`
-  - [ ] Remove from `__manifest__.py`
-  - [ ] Delete tests in `tests/test_telework_request.py`
-- [ ] Task: Create "Teletrabajo" Leave Type (Data)
-  - [ ] Define `data/hr_leave_type_data.xml` for "Teletrabajo"
-  - [ ] Ensure it doesn't require allocation and is available for all employees
+- [x] Task: Remove obsolete `telework.request` model, views, and security e811164
+  - [x] Delete `models/telework_request.py`
+  - [x] Delete `views/telework_request_views.xml`
+  - [x] Delete `security/telework_request_security.xml`
+  - [x] Remove from `__manifest__.py`
+  - [x] Delete tests in `tests/test_telework_request.py`
+- [x] Task: Create "Teletrabajo" Leave Type (Data) 8b77c22
+  - [x] Define `data/hr_leave_type_data.xml` for "Teletrabajo"
+  - [x] Ensure it doesn't require allocation and is available for all employees
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Configuration & Cleanup' (Protocol in workflow.md)
 
 ## Phase 2: Visual Styling (CSS)
 
-- [ ] Task: Implement CSS styles for Telework Leave Type
-  - [ ] Identify CSS classes used by Odoo 18 Calendar for leave types
-  - [ ] Create `static/src/css/telework_timeoff.css`
-  - [ ] Define styles for "Teletrabajo" based on its color/id and state (draft/approved)
-- [ ] Task: Register CSS in Assets
-  - [ ] Update `__manifest__.py` to include the new CSS file in `web.assets_backend`
+- [x] Task: Implement CSS styles for Telework Leave Type fb65f15
+  - [x] Identify CSS classes used by Odoo 18 Calendar for leave types
+  - [x] Create `static/src/css/telework_timeoff.css`
+  - [x] Define styles for "Teletrabajo" based on its color/id and state (draft/approved)
+- [x] Task: Register CSS in Assets fb65f15
+  - [x] Update `__manifest__.py` to include the new CSS file in `web.assets_backend`
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Visual Styling (CSS)' (Protocol in workflow.md)
 
 ## Phase 3: Final Integration & Tests

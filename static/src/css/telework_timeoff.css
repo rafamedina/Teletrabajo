@@ -1,61 +1,75 @@
-/* Telework Integration - Refined Visual Styles for Time Off Calendar */
+/* Telework Integration - Odoo 18 High Specificity Overrides */
 
-/* 
-   Lilac Theme:
-   Base Lilac: #E6E6FA (Lavender)
-   Stripe Lilac: #D8BFD8 (Thistle)
-   Text: #212529 (Dark Grey for contrast)
-*/
-
-/* 1. Base Styles for Telework (Color 5) - Validated State (Solid) */
-.o_calendar_view .fc-event.o_calendar_color_5,
-.o_calendar_view .fc-event.o_calendar_color_5 .fc-event-main,
-.o_calendar_view .fc-event.o_calendar_color_5 .fc-event-main-frame {
-    background-color: #E6E6FA !important;
-    border-color: #D8BFD8 !important;
-    color: #212529 !important; /* Dark text for contrast */
-    opacity: 1 !important;
+/* ========================================================================
+   1. BASE / VALIDADO (Verde Sólido)
+   ======================================================================== */
+.o_calendar_renderer .fc-event.o_calendar_color_2,
+.o_calendar_renderer .fc-event.o_calendar_color_10 {
+  --fc-event-bg-color: #b9e2b6 !important;
+  --o-event-bg: #04bf8a !important;
+  --fc-event-border-color: #000000 !important;
+  --o-event-bg--subtle-rgb: 185, 226, 182 !important;
+  background-color: #04bf8a !important;
+  background-image: none !important;
 }
 
-/* Ensure text inside is dark and readable */
-.o_calendar_view .fc-event.o_calendar_color_5 .fc-event-title,
-.o_calendar_view .fc-event.o_calendar_color_5 .fc-event-time {
-    color: #212529 !important;
-    font-weight: bold !important;
+/* ========================================================================
+   2. PENDIENTE (Rayas Verde/Blanco)
+   USAMOS EL SELECTOR EXACTO DEL DEVTOOLS PARA GANAR POR ESPECIFICIDAD
+   ======================================================================== */
+.o_calendar_renderer
+  .o_calendar_color_2.o_event_hatched:not(.o_event_dot):not(
+    .fc-daygrid-event
+  ):not(.fc-timegrid-event),
+.o_calendar_renderer
+  .o_calendar_color_10.o_event_hatched:not(.o_event_dot):not(
+    .fc-daygrid-event
+  ):not(.fc-timegrid-event),
+.o_calendar_renderer .o_calendar_color_2.o_event_hatched .fc-bg,
+.o_calendar_renderer .o_calendar_color_10.o_event_hatched .fc-bg,
+.o_calendar_renderer
+  .o_calendar_color_2.o_attendee_status_tentative:not(.o_event_dot)
+  .fc-bg,
+.o_calendar_renderer
+  .o_calendar_color_10.o_attendee_status_tentative:not(.o_event_dot)
+  .fc-bg,
+.o_calendar_renderer .fc-event.o_event_hatched {
+  background: repeating-linear-gradient(
+    45deg,
+    #ffffff,
+    #ffffff 10px,
+    #04bf8a 10px,
+    #04bf8a 20px
+  ) !important;
+  --fc-event-bg-color: transparent !important;
+  --o-event-bg: transparent !important;
 }
 
-/* 2. Pending State (Striped Lilac) 
-   We target events that Odoo marked as pending (usually via opacity or specific classes)
-*/
-.o_calendar_view .fc-event.o_calendar_color_5[style*="opacity"],
-.o_calendar_view .fc-event.o_calendar_color_5.o_event_draft,
-.o_calendar_view .fc-event.o_calendar_color_5.o_event_confirm,
-.o_calendar_view .fc-event.o_calendar_color_5.o_calendar_slot_waiting {
-    background: repeating-linear-gradient(
-        45deg,
-        #E6E6FA,
-        #E6E6FA 10px,
-        #D8BFD8 10px,
-        #D8BFD8 20px
-    ) !important;
-    border-color: #D8BFD8 !important;
-    opacity: 1 !important; /* Force full visibility but kept the stripes */
+/* ========================================================================
+   3. RECHAZADO (Blanco con Línea de Tachado Verde)
+   ======================================================================== */
+.o_calendar_renderer .o_calendar_color_2.o_event_striked:not(.o_event_dot),
+.o_calendar_renderer .o_calendar_color_10.o_event_striked:not(.o_event_dot) {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  background-image: linear-gradient(
+    transparent 0 45%,
+    #04bf8a 45% 55%,
+    transparent 55% 100%
+  ) !important;
+  --fc-event-bg-color: #ffffff !important;
+  --o-event-bg: #ffffff !important;
+  --fc-event-border-color: #04bf8a !important;
 }
 
-/* Fix for internal containers in striped mode */
-.o_calendar_view .fc-event.o_calendar_color_5[style*="opacity"] .fc-event-main,
-.o_calendar_view .fc-event.o_calendar_color_5.o_event_draft .fc-event-main,
-.o_calendar_view .fc-event.o_calendar_color_5.o_event_confirm .fc-event-main {
-    background: transparent !important;
+/* Ajustes de texto generales */
+.o_calendar_renderer .fc-event.o_calendar_color_2 .fc-event-main,
+.o_calendar_renderer .fc-event.o_calendar_color_10 .fc-event-main {
+  color: #212529 !important;
+  --fc-event-text-color: #212529 !important;
 }
 
-/* 3. Fallback for Color 2 (Yellow) - If Odoo didn't update the Leave Type color yet
-   We apply the same Lilac styles to override the default yellow.
-*/
-.o_calendar_view .fc-event.o_calendar_color_2 {
-    /* Only apply if the event belongs to Telework. 
-       Note: CSS cannot easily check the text, but if the user sees yellow, 
-       this might help if we target the specific instance.
-       For now, we recommend updating the Leave Type via UI to Color 5.
-    */
+.o_calendar_renderer .fc-event.o_event_striked .fc-event-main {
+  color: #04bf8a !important;
+  --fc-event-text-color: #04bf8a !important;
 }
