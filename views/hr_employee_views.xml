@@ -6,6 +6,18 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="%(Teletrabajo.action_telework_request_calendar)d"
+                        class="oe_stat_button"
+                        icon="fa-calendar"
+                        type="action"
+                        context="{'search_default_employee_id': id, 'default_employee_id': id}">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">Telework</span>
+                        <span class="o_stat_text">Calendar</span>
+                    </div>
+                </button>
+            </xpath>
             <!-- Usamos 'monday_location_id' como ancla técnica.
                  Insertamos el grupo de validación justo ANTES de que empiecen los días.
             -->

@@ -107,3 +107,22 @@ class TestTeleworkRequest(TransactionCase):
             manager_requests.ids,
             "Manager should see subordinate's request",
         )
+
+    def test_04_calendar_view_integration(self):
+        """Test the existence and configuration of the calendar view"""
+        # Verify the view exists
+        view_id = self.env.ref(
+            "Teletrabajo.view_telework_request_calendar", raise_if_not_found=False
+        )
+        self.assertTrue(view_id, "Telework Request calendar view should exist")
+
+        # Verify action exists and points to correct model
+        action = self.env.ref(
+            "Teletrabajo.action_telework_request_calendar", raise_if_not_found=False
+        )
+        self.assertTrue(action, "Telework Request calendar action should exist")
+        self.assertEqual(
+            action.res_model,
+            "telework.request",
+            "Action should point to telework.request",
+        )

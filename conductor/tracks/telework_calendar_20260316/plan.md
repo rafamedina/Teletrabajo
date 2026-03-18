@@ -12,7 +12,7 @@
 
 ## Phase 2: Calendar View Integration
 
-- [ ] Task: Inherit and Extend `hr.employee` Calendar View
+- [~] Task: Inherit and Extend `hr.employee` Calendar View
   - [ ] Write tests to verify the calendar view is inherited and uses `telework.request`
   - [ ] Create `views/telework_request_views.xml` with calendar definition
   - [ ] Extend the employee's existing calendar action to point to this new model context
