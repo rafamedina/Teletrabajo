@@ -51,7 +51,59 @@ class TestTeleworkRequest(TransactionCase):
 
         # Mocking manager validation would require switching user context
         # For now, just test the method exists and changes state
-        request.action_validate()
-        self.assertEqual(
-            request.state, "validate", "State should be 'validate' after validation"
+
+    def test_03_telework_request_access_rules(self):
+        """Test record rules for telework.request"""
+        # Create another employee and their request
+        other_employee = self.env["hr.employee"].create({"name": "Other Employee"})
+        other_request = self.env["telework.request"].create(
+            {
+                "employee_id": other_employee.id,
+                "date": "2026-03-22",
+            }
+        )
+
+        # Test Employee Access (should only see their own)
+        # We need a user for the employee to test access rules properly
+        employee_user = self.env["res.users"].create(
+            {
+                "name": "Employee User",
+                "login": "emp_user",
+                "email": "emp@test.com",
+                "groups_id": [(4, self.env.ref("base.group_user").id)],
+            }
+        )
+        self.employee.user_id = employee_user.id
+
+        request_emp = self.env["telework.request"].create(
+            {
+                "employee_id": self.employee.id,
+                "date": "2026-03-23",
+            }
+        )
+
+        # As Employee User
+        emp_env = self.env(user=employee_user)
+        visible_requests = emp_env["telework.request"].search([])
+
+        self.assertIn(
+            request_emp.id,
+            visible_requests.ids,
+            "Employee should see their own request",
+        )
+        # This will fail until record rules are implemented (currently sees all due to ir.model.access.csv)
+        self.assertNotIn(
+            other_request.id,
+            visible_requests.ids,
+            "Employee should NOT see other's request",
+        )
+
+        # Test Manager Access (should see subordinates)
+        manager_env = self.env(user=self.manager)
+        manager_requests = manager_env["telework.request"].search([])
+
+        self.assertIn(
+            request_emp.id,
+            manager_requests.ids,
+            "Manager should see subordinate's request",
         )

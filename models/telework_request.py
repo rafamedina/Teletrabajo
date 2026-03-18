@@ -5,14 +5,16 @@ from odoo import models, fields, api
 class TeleworkRequest(models.Model):
     _name = "telework.request"
     _description = "Telework Request"
+    _inherit = ["mail.thread", "mail.activity.mixin"]
 
     employee_id = fields.Many2one(
         "hr.employee",
         string="Employee",
         required=True,
         default=lambda self: self.env.user.employee_id,
+        tracking=True,
     )
-    date = fields.Date(string="Date", required=True)
+    date = fields.Date(string="Date", required=True, tracking=True)
     state = fields.Selection(
         [("draft", "Draft"), ("confirm", "Confirmed"), ("validate", "Validated")],
         string="Status",
