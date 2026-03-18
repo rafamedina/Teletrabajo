@@ -15,13 +15,14 @@ Instead of a separate model, telework will be integrated directly into Odoo's st
 - **Settings**: 
   - `allocation_type`: No allocation needed (employees can request freely).
   - `request_unit`: Day (or Half Day).
-  - `color`: Specific index to target with CSS.
+  - `color`: Purple (Index 5).
   - `requires_allocation`: No.
+  - `leave_validation_type`: Single validation (hr).
 
 ### 2. Visual Differentiation (CSS)
 - The Time Off calendar entries for the "Teletrabajo" type must be styled:
-  - **Status: Draft/To Approve**: Yellow background with diagonal stripes.
-  - **Status: Approved**: Solid yellow background.
+  - **Status: Draft/To Approve**: Purple background with diagonal stripes.
+  - **Status: Approved**: Solid purple background.
 
 ### 3. Workflow
 - Use the standard `hr.leave` approval workflow.
