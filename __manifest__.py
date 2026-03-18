@@ -6,9 +6,10 @@
     "author": "",
     "website": "",
     "category": "",
-    "depends": ["base", "mail", "hr", "hr_skills"],
+    "depends": ["base", "mail", "hr", "hr_skills", "hr_holidays"],
     "data": [
         "security/ir.model.access.csv",
+        "data/hr_leave_type_data.xml",
         "views/hr_employee_views.xml",
     ],
     "assets": {
