@@ -3,41 +3,39 @@
 /* 
    Odoo 18 Calendar Event Colors. 
    Color 5 is Purple.
-   By default, Odoo uses .o_calendar_color_5
+   We use high specificity to override Odoo's default 'hr_holidays' styles.
 */
 
-/* Pending Telework (Draft/Confirm) - Striped Purple */
-/* We target the specific color and apply stripes if it's not fully approved.
-   In Odoo 18, pending events often have 'opacity' or specific classes.
-   To be precise, we target the event background.
-*/
-
-.o_calendar_view .o_calendar_widget .fc-event.o_calendar_color_5 {
-    border-color: #a24689 !important;
-    color: white !important;
+/* Base style for Telework events (Solid Purple) */
+.o_calendar_view .fc-event.o_calendar_color_5,
+.o_calendar_view .fc-event.o_calendar_color_5 .fc-event-main,
+.o_calendar_view .fc-event.o_calendar_color_5 .fc-event-main-frame {
+    background-color: #6B4C9A !important; /* Deep Purple */
+    border-color: #553C7B !important;
+    color: #FFFFFF !important;
+    opacity: 1 !important;
 }
 
-/* Base style for Telework events (using purple) */
-.o_calendar_view .o_calendar_widget .fc-event.o_calendar_color_5 .fc-event-main {
-    background-color: #a24689 !important;
-}
-
-/* Striped effect for Pending states.
-   Note: We might need to adjust the selector based on how Odoo 18 marks pending leaves.
-   Usually, it adds a class like .o_event_draft or uses opacity.
-   If it's opacity, we can override it with a gradient.
+/* Striped Purple for Pending/Draft Telework 
+   Odoo 18 uses 'opacity' or specific classes for pending leaves.
 */
-.o_calendar_view .o_calendar_widget .fc-event.o_calendar_color_5[style*="opacity"] .fc-event-main,
-.o_calendar_view .o_calendar_widget .fc-event.o_calendar_color_5.o_event_draft .fc-event-main,
-.o_calendar_view .o_calendar_widget .fc-event.o_calendar_color_5.o_event_confirm .fc-event-main {
+.o_calendar_view .fc-event.o_calendar_color_5[style*="opacity"],
+.o_calendar_view .fc-event.o_calendar_color_5.o_event_draft,
+.o_calendar_view .fc-event.o_calendar_color_5.o_event_confirm {
     background: repeating-linear-gradient(
         45deg,
-        #a24689,
-        #a24689 10px,
-        #b366a1 10px,
-        #b366a1 20px
+        #6B4C9A,
+        #6B4C9A 10px,
+        #8E6BBF 10px,
+        #8E6BBF 20px
     ) !important;
-    opacity: 1 !important; /* Ensure it's visible even if Odoo tries to fade it */
+    border-color: #553C7B !important;
+    opacity: 1 !important; /* Force visibility */
 }
 
-/* Validated Telework - Solid Purple (Already handled by base style above) */
+/* Fix for the internal container in striped mode */
+.o_calendar_view .fc-event.o_calendar_color_5[style*="opacity"] .fc-event-main,
+.o_calendar_view .fc-event.o_calendar_color_5.o_event_draft .fc-event-main,
+.o_calendar_view .fc-event.o_calendar_color_5.o_event_confirm .fc-event-main {
+    background: transparent !important;
+}
