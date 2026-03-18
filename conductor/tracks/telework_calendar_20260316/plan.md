@@ -1,16 +1,14 @@
 # Implementation Plan: Telework Calendar Integration
 
-## Phase 1: Scaffolding & Data Model
+## Phase 1: Scaffolding & Data Model [checkpoint: c6db4d5]
 
 - [x] Task: Define `telework.request` model with fields (`employee_id`, `date`, `state`, `manager_id`) 82e34ab
   - [x] Write tests for model structure and default values
   - [x] Implement `telework.request` model in `models/telework_request.py`
 - [x] Task: Set up Access Rights and Rules 82e34ab
-
   - [x] Define `ir.model.access.csv` for the new model
-  - [~] Task: Create Record Rules for employees (own requests) and managers (department requests)
-
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Scaffolding & Data Model' (Protocol in workflow.md)
+  - [x] Task: Create Record Rules for employees (own requests) and managers (department requests) 49ce872
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Scaffolding & Data Model' (Protocol in workflow.md)
 
 ## Phase 2: Calendar View Integration
 
