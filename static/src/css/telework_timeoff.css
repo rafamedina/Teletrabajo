@@ -1,0 +1,43 @@
+/* Telework Integration - Visual Styles for Time Off Calendar */
+
+/* 
+   Odoo 18 Calendar Event Colors. 
+   Color 5 is Purple.
+   By default, Odoo uses .o_calendar_color_5
+*/
+
+/* Pending Telework (Draft/Confirm) - Striped Purple */
+/* We target the specific color and apply stripes if it's not fully approved.
+   In Odoo 18, pending events often have 'opacity' or specific classes.
+   To be precise, we target the event background.
+*/
+
+.o_calendar_view .o_calendar_widget .fc-event.o_calendar_color_5 {
+    border-color: #a24689 !important;
+    color: white !important;
+}
+
+/* Base style for Telework events (using purple) */
+.o_calendar_view .o_calendar_widget .fc-event.o_calendar_color_5 .fc-event-main {
+    background-color: #a24689 !important;
+}
+
+/* Striped effect for Pending states.
+   Note: We might need to adjust the selector based on how Odoo 18 marks pending leaves.
+   Usually, it adds a class like .o_event_draft or uses opacity.
+   If it's opacity, we can override it with a gradient.
+*/
+.o_calendar_view .o_calendar_widget .fc-event.o_calendar_color_5[style*="opacity"] .fc-event-main,
+.o_calendar_view .o_calendar_widget .fc-event.o_calendar_color_5.o_event_draft .fc-event-main,
+.o_calendar_view .o_calendar_widget .fc-event.o_calendar_color_5.o_event_confirm .fc-event-main {
+    background: repeating-linear-gradient(
+        45deg,
+        #a24689,
+        #a24689 10px,
+        #b366a1 10px,
+        #b366a1 20px
+    ) !important;
+    opacity: 1 !important; /* Ensure it's visible even if Odoo tries to fade it */
+}
+
+/* Validated Telework - Solid Purple (Already handled by base style above) */

@@ -13,7 +13,10 @@
         "views/hr_employee_views.xml",
     ],
     "assets": {
-        "web.assets_backend": ["Teletrabajo/static/src/**/*"],
+        "web.assets_backend": [
+            "Teletrabajo/static/src/css/telework_timeoff.css",
+            "Teletrabajo/static/src/**/*"
+        ],
     },
     "application": True,
     "installable": True,
