@@ -8,9 +8,7 @@
     "category": "",
     "depends": ["base", "mail", "hr", "hr_skills"],
     "data": [
-        "security/telework_request_security.xml",
         "security/ir.model.access.csv",
-        "views/telework_request_views.xml",
         "views/hr_employee_views.xml",
     ],
     "assets": {

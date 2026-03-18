@@ -1,49 +1,42 @@
-# Specification: Telework Calendar Integration
+# Specification: Telework Integration in Time Off (hr.leave)
 
 ## Overview
 
-This track aims to integrate telework management into the `hr.employee` calendar view. Employees can request telework days directly from the calendar, which will then follow an approval workflow with specific visual indicators and automated notifications for managers.
+Instead of a separate model, telework will be integrated directly into Odoo's standard **Time Off (hr.leave)** module. A dedicated **Leave Type** "Teletrabajo" will be created. Requests of this type will be visually distinguished in the existing Time Off calendar with a yellow color (striped for draft/confirmed, solid for validated).
 
 ## Track ID
 
-`telework_calendar_20260316`
+`telework_calendar_20260316` (Updated Direction)
 
 ## Functional Requirements
 
-### 1. Data Model: `telework.request`
+### 1. Data Configuration: `hr.leave.type`
+- Create a default Leave Type named "Teletrabajo".
+- **Settings**: 
+  - `allocation_type`: No allocation needed (employees can request freely).
+  - `request_unit`: Day (or Half Day).
+  - `color`: Specific index to target with CSS.
+  - `requires_allocation`: No.
 
-- Create a new model `telework.request` with:
-  - `employee_id`: Many2one (`hr.employee`).
-  - `date`: Date of the telework.
-  - `state`: Selection (`draft`, `confirm`, `validate`).
-  - `manager_id`: Many2one (`res.users`, related to the employee's manager).
+### 2. Visual Differentiation (CSS)
+- The Time Off calendar entries for the "Teletrabajo" type must be styled:
+  - **Status: Draft/To Approve**: Yellow background with diagonal stripes.
+  - **Status: Approved**: Solid yellow background.
 
-### 2. Calendar View Extension
-
-- Override the calendar view accessible from the `hr.employee` buttons (Time Off/Attendance context) to display `telework.request` records.
-- **Selection Logic**: When an employee selects a day, the standard Odoo calendar creation dialog should appear for `telework.request`.
-
-### 3. Visual States (CSS)
-
-- Style calendar events based on their `state`:
-  - **Draft/Confirm**: Yellow background with diagonal stripes (`striped` effect).
-  - **Validated**: Solid yellow background.
-
-### 4. Approval Workflow & Notifications
-
-- **Creation**: Upon creating/confirming a request, an **Odoo Activity** is automatically created for the manager.
-- **Validation**: Only the assigned manager can validate the request.
+### 3. Workflow
+- Use the standard `hr.leave` approval workflow.
+- Optionally, automate certain states if requested by the user later (e.g., auto-confirm).
 
 ## Technical Constraints
 
-- **Puzzle Architecture**: All changes must reside within the `Teletrabajo` module. No modifications to core `hr` modules.
-- **Odoo 18 Compatibility**: Use standard Odoo 18 calendar view features and CSS/OWL patterns.
+- **Extension**: Inherit `hr.leave` and `hr.leave.type` if needed for CSS targeting.
+- **CSS**: Use OWL or standard backend CSS to target calendar events by type.
+- **Odoo 18**: Must follow the latest Odoo 18 patterns for Calendar and Time Off.
 
 ## Acceptance Criteria
 
-- [ ] Employees can see/select telework days in the calendar.
-- [ ] Selecting a day opens the standard creation popup.
-- [ ] Draft/Confirm requests appear as yellow striped events.
-- [ ] Validated requests appear as solid yellow events.
-- [ ] An Odoo Activity is created for the manager on confirmation.
-- [ ] Only the manager can validate.
+- [ ] A "Teletrabajo" leave type is available in the Time Off dashboard.
+- [ ] Selecting "Teletrabajo" in the calendar opens the standard Time Off request form.
+- [ ] Telework entries in the Time Off calendar are yellow and striped when not yet fully approved.
+- [ ] Fully approved telework entries are solid yellow.
+- [ ] No new independent menu or model is used; it's all within Time Off.
