@@ -1,8 +1,0 @@
-{
-  "track_id": "telework_alerts_20260316",
-  "type": "feature",
-  "status": "new",
-  "created_at": "2026-03-16T12:05:00Z",
-  "updated_at": "2026-03-16T12:05:00Z",
-  "description": "una vez creadoel boton, hay que usar un sistema para que si se cambia el dia del trabajo de un trabajador, le llegue una alerta al gerente de ese empleado para que tenga que validar el nuevo horario, hay que tener en cuenta que solo le llgue al gerente de ese empleado"
-}
