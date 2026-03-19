@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
 
@@ -17,13 +17,13 @@ class HrEmployee(models.Model):
         tracking=True,
     )
 
-    monday_location_id = fields.Many2one("hr.work.location", string="Lunes")
-    tuesday_location_id = fields.Many2one("hr.work.location", string="Martes")
-    wednesday_location_id = fields.Many2one("hr.work.location", string="Miércoles")
-    thursday_location_id = fields.Many2one("hr.work.location", string="Jueves")
-    friday_location_id = fields.Many2one("hr.work.location", string="Viernes")
-    saturday_location_id = fields.Many2one("hr.work.location", string="Sábado")
-    sunday_location_id = fields.Many2one("hr.work.location", string="Domingo")
+    monday_location_id = fields.Many2one("hr.work.location", string=_("Lunes"))
+    tuesday_location_id = fields.Many2one("hr.work.location", string=_("Martes"))
+    wednesday_location_id = fields.Many2one("hr.work.location", string=_("Miércoles"))
+    thursday_location_id = fields.Many2one("hr.work.location", string=_("Jueves"))
+    friday_location_id = fields.Many2one("hr.work.location", string=_("Viernes"))
+    saturday_location_id = fields.Many2one("hr.work.location", string=_("Sábado"))
+    sunday_location_id = fields.Many2one("hr.work.location", string=_("Domingo"))
 
     is_telework_manager = fields.Boolean(
         compute="_compute_is_telework_manager"
@@ -90,8 +90,10 @@ class HrEmployee(models.Model):
                         "activity_type_id": activity_type.id
                         if activity_type
                         else False,
-                        "summary": "Validación de Teletrabajo",
-                        "note": "El empleado %s ha cambiado la fecha del teletrabajo, por favor entre a validar los cambios."
+                        "summary": _("Validación de Teletrabajo"),
+                        "note": _(
+                            "El empleado %s ha cambiado la fecha del teletrabajo, por favor entre a validar los cambios."
+                        )
                         % employee.name,
                         "user_id": employee.parent_id.user_id.id,
                     }
@@ -104,8 +106,10 @@ class HrEmployee(models.Model):
             current_employee = self.env.user.employee_id
             if not current_employee or employee.parent_id != current_employee:
                 raise UserError(
-                    "Acceso denegado: Solo tu gerente directo (%s) puede validar esta solicitud."
-                    % (employee.parent_id.name or "asignado")
+                    _(
+                        "Acceso denegado: Solo tu gerente directo (%s) puede validar esta solicitud."
+                    )
+                    % (employee.parent_id.name or _("asignado"))
                 )
 
             employee.telework_state = "validated"

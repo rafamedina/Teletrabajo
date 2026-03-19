@@ -9,7 +9,7 @@
             <!-- Usamos 'monday_location_id' como ancla para insertarlo justo antes de la tabla de días.
                  Para que funcione correctamente, usamos position="before" del primer día.
             -->
-            <xpath expr="//field[@name='monday_location_id']" position="before">
+            <xpath expr="//field[@name='parent_id']" position="before">
                 <field name="is_telework_manager" invisible="1"/>
                 <label for="telework_state" string="Estado Validación"/>
                 <div class="o_row">
@@ -24,7 +24,15 @@
                             invisible="telework_state != 'draft' or not is_telework_manager"
                             confirm="¿Estás seguro de que deseas validar el teletrabajo para este empleado?"/>
                 </div>
-                <field name="parent_id" string="Gerente Autorizador" readonly="1"/>
+                <group string="Calendario de Teletrabajo">
+                    <field name="monday_location_id"/>
+                    <field name="tuesday_location_id"/>
+                    <field name="wednesday_location_id"/>
+                    <field name="thursday_location_id"/>
+                    <field name="friday_location_id"/>
+                    <field name="saturday_location_id"/>
+                    <field name="sunday_location_id"/>
+                </group>
             </xpath>
         </field>
     </record>
