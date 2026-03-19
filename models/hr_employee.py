@@ -3,37 +3,40 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
 
-# creamos el modelo que hereda de hr.employee para agregar el campo de estado del teletrabajo y el campo booleano para identificar a los gerentes de teletrabajo. También agregamos la lógica para validar el teletrabajo y crear actividades para los gerentes cuando se cambian los días de teletrabajo.
 class HrEmployee(models.Model):
-    _inherit = "hr.employee"  # Heredamos del modelo hr.employee para agregar campos y lógica relacionada con el teletrabajo
+    """Extensión de hr.employee para la gestión de teletrabajo utilizando campos nativos de Odoo 18."""
+
+    _inherit = "hr.employee"
 
     telework_state = fields.Selection(
         [
             ("draft", "Sin validar"),
             ("validated", "Validado"),
-        ],  # Definimos los estados posibles para el teletrabajo: "draft" para sin validar y "validated" para validado
+        ],
         string="Estado de Teletrabajo",
         default="draft",
         tracking=True,
     )
 
-    monday_location_id = fields.Many2one("hr.work.location", string=_("Lunes"))
-    tuesday_location_id = fields.Many2one("hr.work.location", string=_("Martes"))
-    wednesday_location_id = fields.Many2one("hr.work.location", string=_("Miércoles"))
-    thursday_location_id = fields.Many2one("hr.work.location", string=_("Jueves"))
-    friday_location_id = fields.Many2one("hr.work.location", string=_("Viernes"))
-    saturday_location_id = fields.Many2one("hr.work.location", string=_("Sábado"))
-    sunday_location_id = fields.Many2one("hr.work.location", string=_("Domingo"))
+    monday_location_id = fields.Many2one("hr.work.location", string=("Lunes"))
+    tuesday_location_id = fields.Many2one("hr.work.location", string=("Martes"))
+    wednesday_location_id = fields.Many2one("hr.work.location", string=("Miércoles"))
+    thursday_location_id = fields.Many2one("hr.work.location", string=("Jueves"))
+    friday_location_id = fields.Many2one("hr.work.location", string=("Viernes"))
+    saturday_location_id = fields.Many2one("hr.work.location", string=("Sábado"))
+    sunday_location_id = fields.Many2one("hr.work.location", string=("Domingo"))
 
     is_telework_manager = fields.Boolean(
-        compute="_compute_is_telework_manager"
-    )  # Creamos un campo booleano computado para identificar si el empleado es gerente de teletrabajo
+        compute="_compute_is_telework_manager",
+        help="Indica si el usuario actual es el gerente del empleado.",
+    )
 
     @api.depends("parent_id")
     def _compute_is_telework_manager(self):
+        """Calcula si el usuario conectado es el responsable directo del empleado."""
+        current_user = self.env.user
         for employee in self:
-            # Comprobamos si el usuario actual es el gerente directo
-            employee.is_telework_manager = employee.parent_id.user_id == self.env.user
+            employee.is_telework_manager = employee.parent_id.user_id == current_user
 
     @api.onchange(
         "monday_location_id",
@@ -45,14 +48,12 @@ class HrEmployee(models.Model):
         "sunday_location_id",
     )
     def _onchange_telework_days(self):
-        """Si se cambia cualquier día de la semana, el estado vuelve a Sin validar."""
+        """Reset de estado en la interfaz de usuario al modificar ubicaciones nativas."""
         self.telework_state = "draft"
 
     def write(self, vals):
-        """Sobrescribimos write para asegurar que si se cambian los días,
-        el estado pase a sin validar incluso si se hace por API o importación.
-        """
-        day_fields = [
+        """Control de integridad y notificaciones al modificar el horario nativo de Odoo 18."""
+        day_fields = {
             "monday_location_id",
             "tuesday_location_id",
             "wednesday_location_id",
@@ -60,54 +61,46 @@ class HrEmployee(models.Model):
             "friday_location_id",
             "saturday_location_id",
             "sunday_location_id",
-        ]
-        # Si alguno de los campos de días está en los valores a cambiar, forzamos sin validar
-        should_create_activity = False
-        if any(field in vals for field in day_fields):
+        }
+
+        # Si se modifican campos de ubicación nativos, forzamos estado draft y preparamos actividad
+        if day_fields & set(vals.keys()):
             vals["telework_state"] = "draft"
-            should_create_activity = True
-
-        res = super(HrEmployee, self).write(vals)
-
-        if should_create_activity:
+            res = super().write(vals)
             self._create_telework_activity()
+            return res
 
-        return res
+        return super().write(vals)
 
     def _create_telework_activity(self):
-        """Crea una actividad para el gerente del empleado cuando se cambia el horario de teletrabajo."""
-        for employee in self:
-            if employee.parent_id and employee.parent_id.user_id:
-                # Buscamos el tipo de actividad 'To Do' o similar
-                activity_type = self.env.ref(
-                    "mail.mail_activity_data_todo", raise_if_not_found=False
-                )
+        """Genera una actividad para el gerente informando de cambios pendientes de validar."""
+        activity_type = self.env.ref(
+            "mail.mail_activity_data_todo", raise_if_not_found=False
+        )
+        model_id = self.env.ref("hr.model_hr_employee").id
 
-                self.env["mail.activity"].create(
-                    {
-                        "res_id": employee.id,
-                        "res_model_id": self.env.ref("hr.model_hr_employee").id,
-                        "activity_type_id": activity_type.id
-                        if activity_type
-                        else False,
-                        "summary": _("Validación de Teletrabajo"),
-                        "note": _(
-                            "El empleado %s ha cambiado la fecha del teletrabajo, por favor entre a validar los cambios."
-                        )
-                        % employee.name,
-                        "user_id": employee.parent_id.user_id.id,
-                    }
-                )
+        for employee in self.filtered(lambda e: e.parent_id.user_id):
+            self.env["mail.activity"].create(
+                {
+                    "res_id": employee.id,
+                    "res_model_id": model_id,
+                    "activity_type_id": activity_type.id if activity_type else False,
+                    "summary": _("Validación de Teletrabajo"),
+                    "note": _(
+                        "El empleado %s ha modificado su horario. Por favor, valide los cambios."
+                    )
+                    % employee.name,
+                    "user_id": employee.parent_id.user_id.id,
+                }
+            )
 
-    # (Lógica) - INICIO
     def action_validate_telework(self):
-        """Valida el teletrabajo. Solo el gerente (parent_id) puede validar."""
+        """Acción de validación restringida al responsable directo."""
         for employee in self:
-            current_employee = self.env.user.employee_id
-            if not current_employee or employee.parent_id != current_employee:
+            if not employee.is_telework_manager:
                 raise UserError(
                     _(
-                        "Acceso denegado: Solo tu gerente directo (%s) puede validar esta solicitud."
+                        "Acceso denegado: Solo el responsable directo (%s) puede validar esta solicitud."
                     )
                     % (employee.parent_id.name or _("asignado"))
                 )
