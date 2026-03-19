@@ -42,7 +42,7 @@ case "$ACTION" in
       if docker compose -p "$PROJECT" -f "$COMPOSE_FILE" exec -T odoo python3 -c "
 import xmlrpc.client
 try:
-    xmlrpc.client.ServerProxy('http://localhost:8069/xmlrpc/2/common').version()
+    xmlrpc.client.ServerProxy('http://localhost:8073/xmlrpc/2/common').version()
     exit(0)
 except:
     exit(1)
@@ -64,10 +64,10 @@ except:
       echo "⚡ Reiniciando servicio..."
       docker compose -p "$PROJECT" -f "$COMPOSE_FILE" restart odoo
       echo ""
-      echo "  ✅ Módulo actualizado en http://localhost:8069"
+      echo "  ✅ Módulo actualizado en http://localhost:8073"
     else
       echo ""
-      echo "  ✅ Odoo disponible en: http://localhost:8069"
+      echo "  ✅ Odoo disponible en: http://localhost:8073"
       echo ""
       echo "  📋 Primera vez:"
       echo "    1. Crea BD con nombre: $DB_NAME"

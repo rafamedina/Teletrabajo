@@ -17,6 +17,14 @@ class HrEmployee(models.Model):
         tracking=True,
     )
 
+    monday_location_id = fields.Many2one("hr.work.location", string="Lunes")
+    tuesday_location_id = fields.Many2one("hr.work.location", string="Martes")
+    wednesday_location_id = fields.Many2one("hr.work.location", string="Miércoles")
+    thursday_location_id = fields.Many2one("hr.work.location", string="Jueves")
+    friday_location_id = fields.Many2one("hr.work.location", string="Viernes")
+    saturday_location_id = fields.Many2one("hr.work.location", string="Sábado")
+    sunday_location_id = fields.Many2one("hr.work.location", string="Domingo")
+
     is_telework_manager = fields.Boolean(
         compute="_compute_is_telework_manager"
     )  # Creamos un campo booleano computado para identificar si el empleado es gerente de teletrabajo

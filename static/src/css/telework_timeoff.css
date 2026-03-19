@@ -73,3 +73,12 @@
   color: #04bf8a !important;
   --fc-event-text-color: #04bf8a !important;
 }
+
+/* Colores de la leyenda */
+
+.o_cw_filter_color_2 .o_cw_filter_input_bg:checked {
+  background-color: #04bf8a;
+}
+.o_cw_filter_color_2 .o_cw_filter_input_bg {
+  border-color: #28a745;
+}
