@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- VISTA CALENDARIO -->
+    <record id="hr_telework_request_view_calendar" model="ir.ui.view">
+        <field name="name">hr.telework.request.view.calendar</field>
+        <field name="model">hr.telework.request</field>
+        <field name="arch" type="xml">
+            <calendar string="Teletrabajo"
+                      date_start="date_start"
+                      date_stop="date_stop"
+                      color="color"
+                      quick_create="1"
+                      event_open_popup="1">
+                <field name="name"/>
+                <field name="employee_id" avatar_field="image_128"/>
+                <field name="state" filters="1" invisible="1"/>
+                <field name="is_hatched" invisible="1"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- VISTA LISTA -->
+    <record id="hr_telework_request_view_tree" model="ir.ui.view">
+        <field name="name">hr.telework.request.view.list</field>
+        <field name="model">hr.telework.request</field>
+        <field name="arch" type="xml">
+            <list decoration-info="state == 'draft'" decoration-success="state == 'validated'" decoration-danger="state == 'refused'">
+                <field name="name"/>
+                <field name="employee_id" widget="many2one_avatar_user"/>
+                <field name="date_start"/>
+                <field name="date_stop"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-success="state == 'validated'"
+                       decoration-danger="state == 'refused'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- VISTA FORMULARIO -->
+    <record id="hr_telework_request_view_form" model="ir.ui.view">
+        <field name="name">hr.telework.request.view.form</field>
+        <field name="model">hr.telework.request</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_validate" string="Validar" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_refuse" string="Rechazar" type="object" invisible="state != 'draft'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,validated"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="employee_id" widget="many2one_avatar_user"/>
+                        </group>
+                        <group>
+                            <field name="date_start"/>
+                            <field name="date_stop"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Detalles" name="details">
+                            <group>
+                                <field name="reason" placeholder="Describe el motivo de tu solicitud..."/>
+                            </group>
+                        </page>
+                        <page string="Adjuntos" name="attachments">
+                            <field name="attachment_ids" widget="many2many_binary"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <chatter/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- VISTA BÚSQUEDA -->
+    <record id="hr_telework_request_view_search" model="ir.ui.view">
+        <field name="name">hr.telework.request.view.search</field>
+        <field name="model">hr.telework.request</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Solicitudes">
+                <field name="name"/>
+                <field name="employee_id"/>
+                <filter string="Mis Solicitudes" name="my_requests" domain="[('employee_id.user_id', '=', uid)]"/>
+                <separator/>
+                <filter string="Borrador" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Validado" name="validated" domain="[('state', '=', 'validated')]"/>
+                <filter string="Rechazado" name="refused" domain="[('state', '=', 'refused')]"/>
+                <group expand="0" string="Agrupar por">
+                    <filter string="Empleado" name="group_by_employee" context="{'group_by': 'employee_id'}"/>
+                    <filter string="Estado" name="group_by_state" context="{'group_by': 'state'}"/>
+                    <filter string="Fecha de Inicio" name="group_by_date" context="{'group_by': 'date_start'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ACCIÓN DE VENTANA -->
+    <record id="hr_telework_request_action" model="ir.actions.act_window">
+        <field name="name">Solicitudes de Teletrabajo</field>
+        <field name="res_model">hr.telework.request</field>
+        <field name="view_mode">calendar,list,form</field>
+        <field name="search_view_id" ref="hr_telework_request_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Crea tu primera solicitud de teletrabajo.
+            </p>
+        </field>
+    </record>
+</odoo>

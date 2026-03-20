@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields, api, _
-from odoo.exceptions import UserError
+from odoo import models, fields, api, _  # noqa: F401
+from odoo.exceptions import UserError  # noqa: F401
+from datetime import datetime, timedelta
 
 
 class HrEmployee(models.Model):
@@ -31,6 +32,51 @@ class HrEmployee(models.Model):
         help="Indica si el usuario actual es el gerente del empleado.",
     )
 
+    telework_count = fields.Integer(
+        compute="_compute_telework_count", string="Días de Teletrabajo"
+    )
+
+    default_telework_day = fields.Selection(
+        [
+            ("0", "Lunes"),
+            ("1", "Martes"),
+            ("2", "Miércoles"),
+            ("3", "Jueves"),
+            ("4", "Viernes"),
+        ],
+        string="Día Predeterminado de Teletrabajo",
+        tracking=True,
+    )
+
+    def _compute_telework_count(self):
+        """Calcula el número de solicitudes de teletrabajo para el botón inteligente."""
+        for employee in self:
+            employee.telework_count = self.env["hr.telework.request"].search_count(
+                [("employee_id", "=", employee.id)]
+            )
+
+    def action_open_telework_calendar(self):
+        """Abre la vista de calendario de teletrabajo filtrada por el empleado actual."""
+        self.ensure_one()
+        return {
+            "name": _("Calendario de Teletrabajo"),
+            "type": "ir.actions.act_window",
+            "res_model": "hr.telework.request",
+            "view_mode": "calendar,list,form",
+            "domain": [("employee_id", "=", self.id)],
+            "context": {
+                "default_employee_id": self.id,
+                "search_default_employee_id": self.id,
+            },
+            "help": _(
+                """
+                <p class="o_view_nocontent_smiling_face">
+                    No se han encontrado días de teletrabajo.
+                </p>
+            """
+            ),
+        }
+
     @api.depends("parent_id")
     def _compute_is_telework_manager(self):
         """Calcula si el usuario conectado es el responsable directo del empleado."""
@@ -51,6 +97,56 @@ class HrEmployee(models.Model):
         """Reset de estado en la interfaz de usuario al modificar ubicaciones nativas."""
         self.telework_state = "draft"
 
+    def _generate_telework_recurring_entries(self):
+        """Genera registros en el calendario de teletrabajo para las próximas 4 semanas."""
+        self.ensure_one()
+        if not self.default_telework_day:
+            return
+
+        target_weekday = int(self.default_telework_day)
+        today = datetime.now().date()
+
+        # Generamos para las próximas 4 semanas
+        for i in range(4):
+            # Encontramos el día de la semana objetivo en la semana i
+            days_ahead = target_weekday - today.weekday()
+            if days_ahead <= 0:  # Si ya pasó esta semana, vamos a la siguiente
+                days_ahead += 7
+            days_ahead += i * 7
+
+            target_date = today + timedelta(days=days_ahead)
+
+            # Evitar duplicados para el mismo día
+            existing = self.env["hr.telework.request"].search(
+                [
+                    ("employee_id", "=", self.id),
+                    (
+                        "date_start",
+                        ">=",
+                        datetime.combine(target_date, datetime.min.time()),
+                    ),
+                    (
+                        "date_start",
+                        "<=",
+                        datetime.combine(target_date, datetime.max.time()),
+                    ),
+                ]
+            )
+
+            if not existing:
+                self.env["hr.telework.request"].create(
+                    {
+                        "employee_id": self.id,
+                        "date_start": datetime.combine(
+                            target_date, datetime.min.time().replace(hour=8)
+                        ),
+                        "date_stop": datetime.combine(
+                            target_date, datetime.min.time().replace(hour=17)
+                        ),
+                        "state": "draft",
+                    }
+                )
+
     def write(self, vals):
         """Control de integridad y notificaciones al modificar el horario nativo de Odoo 18."""
         day_fields = {
@@ -70,7 +166,11 @@ class HrEmployee(models.Model):
             self._create_telework_activity()
             return res
 
-        return super().write(vals)
+        res = super().write(vals)
+        if "default_telework_day" in vals:
+            for employee in self:
+                employee._generate_telework_recurring_entries()
+        return res
 
     def _create_telework_activity(self):
         """Genera una actividad para el gerente informando de cambios pendientes de validar."""

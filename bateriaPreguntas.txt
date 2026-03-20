@@ -1,0 +1,9 @@
+to do:
+añadir ci mas robusto con tests
+permisos granulares sin herencias, implementando poco a poco
+crear calendario a parte
+una aprobacion (no hace falta validar)
+poner dia por defecto y que se pueda cambiar
+100$ un dia a la semana
+el gerente valida si se cambia o se añade 1 mas
+separar el calendario y hacerlo dentro del modulo empleados con un boton inteligente pero una vista nueva

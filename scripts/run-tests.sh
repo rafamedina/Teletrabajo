@@ -6,7 +6,7 @@
 #  🧪 Ejecutar Tests en Docker Local (Efímero) — Teletrabajo
 # ──────────────────────────────────────────────
 # Uso:
-#   ./scripts/run-tests.sh          → Todos los tests
+#             → Todos los tests
 #   ./scripts/run-tests.sh unit     → Solo unit tests (TransactionCase)
 #   ./scripts/run-tests.sh int      → Solo integration tests (HTTP + Tours JS)
 #

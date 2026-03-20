@@ -2,15 +2,15 @@
 {
     "name": "Teletrabajo",
     "version": "1.0.0",
-    "summary": """ Teletrabajo Summary """,
+    "summary": """ Gestión de Teletrabajo Independiente """,
     "author": "",
     "website": "",
-    "category": "",
-    "depends": ["base", "mail", "hr", "hr_skills", "hr_holidays"],
+    "category": "Human Resources",
+    "depends": ["base", "mail", "hr", "hr_skills"],
     "data": [
         "security/telework_security.xml",
         "security/ir.model.access.csv",
-        "data/hr_leave_type_data.xml",
+        "views/telework_request_views.xml",
         "views/hr_employee_views.xml",
     ],
     "assets": {
