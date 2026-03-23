@@ -1,0 +1,1 @@
+- TDD validó la existencia temprana de errores de configuración en Odoo 18 al faltar campos (ValueError).

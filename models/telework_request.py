@@ -37,6 +37,17 @@ class HrTeleworkRequest(models.Model):
         default="draft",
         tracking=True,
     )
+    telework_type = fields.Selection(
+        [
+            ("hybrid", "Híbrido"),
+            ("full_remote", "100% Remoto"),
+            ("punctual", "Puntual"),
+        ],
+        string="Modalidad",
+        default="hybrid",
+        required=True,
+        tracking=True,
+    )
     color = fields.Integer(compute="_compute_color", string="Color", store=True)
     is_hatched = fields.Boolean(
         compute="_compute_is_hatched", string="Hatched", store=True

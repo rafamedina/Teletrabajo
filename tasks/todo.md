@@ -1,0 +1,1 @@
+- [x] Mover modalidades de teletrabajo a hr.telework.request (TDD, Python, XML, Limpieza)

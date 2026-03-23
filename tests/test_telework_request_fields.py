@@ -30,6 +30,26 @@ class TestTeleworkRequestFields(TransactionCase):
             "El campo 'attachment_ids' no existe en el modelo.",
         )
 
+    def test_telework_type_field(self):
+        """Verificar que el campo telework_type (Modalidad) existe y funciona."""
+        request = self.telework_model.create(
+            {
+                "employee_id": self.employee.id,
+                "date_start": fields.Datetime.now(),
+                "date_stop": fields.Datetime.now(),
+                "telework_type": "hybrid",
+            }
+        )
+        self.assertTrue(
+            hasattr(request, "telework_type"),
+            "El campo 'telework_type' no existe en el modelo.",
+        )
+        self.assertEqual(
+            request.telework_type,
+            "hybrid",
+            "La modalidad de teletrabajo no se asignó correctamente.",
+        )
+
     def test_attachments_behavior(self):
         """Verificar que se pueden adjuntar archivos a la solicitud."""
         attachment = self.env["ir.attachment"].create(
