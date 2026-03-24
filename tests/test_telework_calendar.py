@@ -57,3 +57,22 @@ class TestTeleworkCalendar(TransactionCase):
             self.employee.id,
             "El contexto de la acción no incluye el empleado por defecto.",
         )
+
+    def test_is_hatched_logic(self):
+        """Verificar que el campo is_hatched se activa solo en borrador."""
+        request = self.telework_model.create(
+            {
+                "employee_id": self.employee.id,
+                "date_start": fields.Datetime.now(),
+                "date_stop": fields.Datetime.now(),
+                "state": "draft",
+            }
+        )
+        self.assertTrue(request.is_hatched, "El estado borrador debería estar rayado.")
+
+        # Simulamos la validación (usando el método action_validate que requiere el manager)
+        # Para el test unitario de lógica de campo, podemos escribir directamente si no probamos seguridad aquí
+        request.write({"state": "validated"})
+        self.assertFalse(
+            request.is_hatched, "El estado validado no debería estar rayado."
+        )

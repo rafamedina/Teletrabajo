@@ -1,1 +1,2 @@
 - [x] Mover modalidades de teletrabajo a hr.telework.request (TDD, Python, XML, Limpieza)
+- [x] Refinar UI del calendario: Colores por modalidad y efecto rayado para estados borrador (Paridad con Ausencias)

@@ -1,84 +1,52 @@
 /* Telework Integration - Odoo 18 High Specificity Overrides */
 
 /* ========================================================================
-   1. BASE / VALIDADO (Verde Sólido)
+   1. BASE / VALIDADO (Colores Sólidos por Modalidad)
    ======================================================================== */
-.o_calendar_renderer .fc-event.o_calendar_color_2,
-.o_calendar_renderer .fc-event.o_calendar_color_10 {
+.o_calendar_renderer .fc-event {
+  --fc-event-border-color: #000000 !important;
+}
+
+/* Forzamos verde para el color por defecto (Híbrido) si Odoo asigna color 2 o similar */
+.o_calendar_renderer .fc-event.o_calendar_color_2 {
   --fc-event-bg-color: #b9e2b6 !important;
   --o-event-bg: #04bf8a !important;
-  --fc-event-border-color: #000000 !important;
-  --o-event-bg--subtle-rgb: 185, 226, 182 !important;
   background-color: #04bf8a !important;
-  background-image: none !important;
 }
 
 /* ========================================================================
-   2. PENDIENTE (Rayas Verde/Blanco)
-   USAMOS EL SELECTOR EXACTO DEL DEVTOOLS PARA GANAR POR ESPECIFICIDAD
+   2. PENDIENTE (Rayas sobre el color base)
    ======================================================================== */
-.o_calendar_renderer
-  .o_calendar_color_2.o_event_hatched:not(.o_event_dot):not(
-    .fc-daygrid-event
-  ):not(.fc-timegrid-event),
-.o_calendar_renderer
-  .o_calendar_color_10.o_event_hatched:not(.o_event_dot):not(
-    .fc-daygrid-event
-  ):not(.fc-timegrid-event),
-.o_calendar_renderer .o_calendar_color_2.o_event_hatched .fc-bg,
-.o_calendar_renderer .o_calendar_color_10.o_event_hatched .fc-bg,
-.o_calendar_renderer
-  .o_calendar_color_2.o_attendee_status_tentative:not(.o_event_dot)
-  .fc-bg,
-.o_calendar_renderer
-  .o_calendar_color_10.o_attendee_status_tentative:not(.o_event_dot)
-  .fc-bg,
 .o_calendar_renderer .fc-event.o_event_hatched {
   background: repeating-linear-gradient(
     45deg,
-    #ffffff,
-    #ffffff 10px,
-    #04bf8a 10px,
-    #04bf8a 20px
+    rgba(255, 255, 255, 0.4),
+    rgba(255, 255, 255, 0.4) 10px,
+    transparent 10px,
+    transparent 20px
   ) !important;
-  --fc-event-bg-color: transparent !important;
-  --o-event-bg: transparent !important;
+  background-color: inherit !important; /* Mantiene el color de la modalidad */
 }
 
 /* ========================================================================
-   3. RECHAZADO (Blanco con Línea de Tachado Verde)
+   3. RECHAZADO (Tachado)
    ======================================================================== */
-.o_calendar_renderer .o_calendar_color_2.o_event_striked:not(.o_event_dot),
-.o_calendar_renderer .o_calendar_color_10.o_event_striked:not(.o_event_dot) {
+.o_calendar_renderer .fc-event.o_event_striked {
   background-color: #ffffff !important;
-  background: #ffffff !important;
   background-image: linear-gradient(
     transparent 0 45%,
     #04bf8a 45% 55%,
     transparent 55% 100%
   ) !important;
-  --fc-event-bg-color: #ffffff !important;
-  --o-event-bg: #ffffff !important;
   --fc-event-border-color: #04bf8a !important;
 }
 
 /* Ajustes de texto generales */
-.o_calendar_renderer .fc-event.o_calendar_color_2 .fc-event-main,
-.o_calendar_renderer .fc-event.o_calendar_color_10 .fc-event-main {
+.o_calendar_renderer .fc-event .fc-event-main {
   color: #212529 !important;
   --fc-event-text-color: #212529 !important;
 }
 
 .o_calendar_renderer .fc-event.o_event_striked .fc-event-main {
   color: #04bf8a !important;
-  --fc-event-text-color: #04bf8a !important;
-}
-
-/* Colores de la leyenda */
-
-.o_cw_filter_color_2 .o_cw_filter_input_bg:checked {
-  background-color: #04bf8a;
-}
-.o_cw_filter_color_2 .o_cw_filter_input_bg {
-  border-color: #28a745;
 }

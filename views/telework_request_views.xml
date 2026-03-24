@@ -8,7 +8,7 @@
             <calendar string="Teletrabajo"
                       date_start="date_start"
                       date_stop="date_stop"
-                      color="color"
+                      color="telework_type"
                       quick_create="1"
                       event_open_popup="1">
                 <field name="name"/>

@@ -48,7 +48,6 @@ class HrTeleworkRequest(models.Model):
         required=True,
         tracking=True,
     )
-    color = fields.Integer(compute="_compute_color", string="Color", store=True)
     is_hatched = fields.Boolean(
         compute="_compute_is_hatched", string="Hatched", store=True
     )
@@ -58,13 +57,6 @@ class HrTeleworkRequest(models.Model):
         string="Adjuntos",
         help="Archivos adjuntos a la solicitud de teletrabajo.",
     )
-
-    @api.depends("state")
-    def _compute_color(self):
-        """Calcula el color según el estado para la vista de calendario."""
-        for request in self:
-            # 2 = Verde Odoo, lo usaremos como base. El CSS lo personalizará.
-            request.color = 2
 
     @api.depends("state")
     def _compute_is_hatched(self):
